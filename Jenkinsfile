@@ -2,6 +2,10 @@
 pipeline {
     agent any
 
+    environment {
+        PYTHON = 'C:\\Users\\saiac\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -12,9 +16,12 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 bat '''
-                    python -m venv .venv
+                    "%PYTHON%" -m venv .venv
+                    if errorlevel 1 exit /b 1
                     .venv\\Scripts\\python.exe -m pip install --upgrade pip
+                    if errorlevel 1 exit /b 1
                     .venv\\Scripts\\python.exe -m pip install -r requirements.txt
+                    if errorlevel 1 exit /b 1
                 '''
             }
         }
